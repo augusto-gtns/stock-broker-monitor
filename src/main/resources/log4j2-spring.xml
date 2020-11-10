@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Properties>
+		<Property name="CONSOLE_LOG_PATTERN">
+				%style{%d{yyyy-MM-dd HH:mm:ss.SSS}{GMT-3}}{bright,black} %highlight{%-4.5level} %style{[%-5.30t]}{bright,black} %style{%-45.45C{1.}}{cyan}%style{:}{bright,black} %msg%n%throwable
+		</Property>
+	</Properties>
+	<Appenders>
+		<Console name="ConsoleStdOut" target="SYSTEM_OUT">
+			<ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="ACCEPT" />
+			<PatternLayout pattern="${CONSOLE_LOG_PATTERN}" />
+		</Console>
+		<Console name="ConsoleStdErr" target="SYSTEM_ERR">
+			<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${CONSOLE_LOG_PATTERN}" />
+		</Console>
+
+		<RollingFile name="RollingFile"
+			fileName="./logs/stdout.log"
+			filePattern="./logs/$${date:yyyy-MM}/stdout-%d{yyyy-MM-dd}_%i.log.gz">
+			<PatternLayout>
+				<pattern>%d %p %C{1.} [%t] %m%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<Root level="info">
+			<AppenderRef ref="ConsoleStdOut" />
+			<AppenderRef ref="ConsoleStdErr" />
+			<AppenderRef ref="RollingFile" />
+		</Root>
+		<!-- LOG package at N level -->
+		<!-- <Logger name="com.package" level="trace"></Logger> -->
+	</Loggers>
+
+</Configuration>
