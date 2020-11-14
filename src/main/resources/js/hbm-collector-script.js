@@ -1,3 +1,4 @@
+<script>
 function makeTextFile(textToWrite) {
   var downloadLink = document.createElement("a");
   // downloadLink.innerHTML = "Download File";
@@ -146,3 +147,4 @@ setTimeout(function () {
 
 // var acoes = runCollector(2000);
 // console.log(acoes[0]);
+</script>

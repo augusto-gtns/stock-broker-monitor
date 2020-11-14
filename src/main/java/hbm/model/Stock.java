@@ -8,6 +8,9 @@ import javax.persistence.Table;
 
 import com.sun.istack.NotNull;
 
+import lombok.Data;
+
+@Data
 @Entity
 @Table(name = "stock")
 public class Stock {
@@ -18,21 +21,4 @@ public class Stock {
 
 	@NotNull
 	private String description;
-	
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 }

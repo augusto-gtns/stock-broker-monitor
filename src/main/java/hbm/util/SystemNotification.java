@@ -1,51 +1,37 @@
 package hbm.util;
 
-import java.awt.Image;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import hbm.util.ExceptionUtil;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class SystemNotification {
 
-	private static final Logger log = LoggerFactory.getLogger(SystemNotification.class);;
+	private static TrayIcon notifier;
 
-	private static TrayIcon notifier = null;
-
-	public static void send(String msg) {
+	@Autowired
+	private void configNotifier() {
 		try {
-			if (notifier == null) {
-				SystemTray tray = SystemTray.getSystemTray();
+			TrayIcon trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage("icon.png"), "HBM");
+			trayIcon.setImageAutoSize(true);
 
-				Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
-				// Toolkit.getDefaultToolkit().createImage(getClass().getResource("icon.png"));
+			SystemTray tray = SystemTray.getSystemTray();
+			tray.add(trayIcon);
 
-				TrayIcon trayIcon = new TrayIcon(image, "HBM");
-				trayIcon.setImageAutoSize(true);
-				
-				trayIcon.addMouseListener(new MouseAdapter() {
-				    public void mouseClicked(MouseEvent e) {
-				    	System.out.println("Clicked!");
-				    }
-				}); 
-				
-				tray.add(trayIcon);
-				
-				notifier = trayIcon;
-			}
-
-			notifier.displayMessage("HBM Warning", msg.replace("|", "\n"), MessageType.INFO);
+			notifier = trayIcon;
 
 		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 			log.error("System notification not supported");
-			log.error(ExceptionUtil.getStackTraceMinified(e));
 		}
+	}
+
+	public static void send(String msg) {
+		notifier.displayMessage("HBM Warning", msg, MessageType.INFO);
 	}
 }

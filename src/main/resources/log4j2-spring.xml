@@ -2,7 +2,7 @@
 <Configuration>
 	<Properties>
 		<Property name="CONSOLE_LOG_PATTERN">
-				%style{%d{yyyy-MM-dd HH:mm:ss.SSS}{GMT-3}}{bright,black} %highlight{%-4.5level} %style{[%-5.30t]}{bright,black} %style{%-45.45C{1.}}{cyan}%style{:}{bright,black} %msg%n%throwable
+				%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{%-4.5level} [%-5.30t] %-45.45C{1.}: %msg%n%throwable
 		</Property>
 	</Properties>
 	<Appenders>
@@ -35,8 +35,6 @@
 			<AppenderRef ref="ConsoleStdErr" />
 			<AppenderRef ref="RollingFile" />
 		</Root>
-		<!-- LOG package at N level -->
-		<!-- <Logger name="com.package" level="trace"></Logger> -->
 	</Loggers>
 
 </Configuration>

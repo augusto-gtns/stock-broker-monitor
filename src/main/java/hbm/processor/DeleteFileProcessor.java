@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.log4j.Log4j2;
 
-@Component(DeleteFileProcessor.NAME)
 @Log4j2
+@Component
 public class DeleteFileProcessor implements Processor {
 
 	public static final String NAME = "DeleteFileProcessor";
@@ -24,7 +24,7 @@ public class DeleteFileProcessor implements Processor {
 		try {
 			deleted = FileUtil.deleteFile(Paths.get(filePathAndName).toFile());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 
 		log.info("File: '" + fileName + "' was " + (deleted ? "deleted" : "not deleted"));

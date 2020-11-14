@@ -7,13 +7,12 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.Predicate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import hbm.processor.DeleteFileProcessor;
-import hbm.processor.HomeBrokerFileToDatatabaseProcessor;
+import hbm.processor.FilePersistenceProcessor;
+import hbm.processor.NotifierProcessor;
 import hbm.processor.ThrowableProcessor;
 import hbm.util.HBMMonitorUtil;
 
@@ -21,29 +20,24 @@ import hbm.util.HBMMonitorUtil;
 public class HomeBrokerRouter extends RouteBuilder {
 
 	public static final String NAME = "HomeBrokerRouter";
+	public static final String STOCK_LIST_HEADER = "HomeBrokerRouter";
 
-	@Autowired
-	Logger log;
-
-	@Value("${hbmonitor.hb.folder}")
+	@Value("${hbm.folder:0}")
 	private String folder;
-	
+
 	@Override
 	public void configure() throws Exception {
-		String from = "file://" + HBMMonitorUtil.toRoutePath(folder) + "?noop=true";
-
-		RouteDefinition route = from(from).routeId(NAME).log(LoggingLevel.INFO, log, "Running");
+		RouteDefinition route = from("file://" + HBMMonitorUtil.toRoutePath(folder) + "?noop=true").routeId(HomeBrokerRouter.NAME)
+				.log(LoggingLevel.INFO, log, "Started");
 
 		route.onException(Throwable.class).process(ThrowableProcessor.NAME).handled(true);
 
-		route.choice().when(isFileNameValid()).log(LoggingLevel.INFO, log, HomeBrokerFileToDatatabaseProcessor.NAME)
-				.process(HomeBrokerFileToDatatabaseProcessor.NAME).otherwise().stop();
-		
-		// dedativado temporariamente
-		//route.log(LoggingLevel.INFO, log, HomeBrokerFileSplitProcessor.NAME).process(HomeBrokerFileSplitProcessor.NAME);
+		route.choice().when(isFileNameValid()).log(LoggingLevel.INFO, log, FilePersistenceProcessor.NAME)
+				.process(FilePersistenceProcessor.NAME).otherwise().stop();
 
-		if (HBMMonitorUtil.isEnvPRD())
-			route.log(LoggingLevel.INFO, log, DeleteFileProcessor.NAME).process(DeleteFileProcessor.NAME);
+		route.log(LoggingLevel.INFO, log, NotifierProcessor.NAME).process(NotifierProcessor.NAME);
+		
+		route.log(LoggingLevel.INFO, log, DeleteFileProcessor.NAME).process(DeleteFileProcessor.NAME);
 
 		route.log(LoggingLevel.INFO, log, "Finished");
 	}
@@ -55,7 +49,7 @@ public class HomeBrokerRouter extends RouteBuilder {
 				String fileName = (String) exchange.getIn().getHeader(Exchange.FILE_NAME_ONLY);
 				log.info("File '" + fileName + "' was founded by route");
 
-				String regex = "collector-hb-\\d+\\.json";
+				String regex = "hbm-\\d+\\.json";
 				return Pattern.compile(regex).matcher(fileName).matches();
 			}
 		};
