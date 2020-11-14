@@ -1,4 +1,4 @@
-package hbm.util;
+package sbm.util;
 
 import java.awt.SystemTray;
 import java.awt.Toolkit;
@@ -6,10 +6,12 @@ import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@Component
 public class SystemNotification {
 
 	private static TrayIcon notifier;
@@ -22,16 +24,18 @@ public class SystemNotification {
 
 			SystemTray tray = SystemTray.getSystemTray();
 			tray.add(trayIcon);
-
+			
 			notifier = trayIcon;
 
 		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
 			log.error("System notification not supported");
 		}
 	}
 
 	public static void send(String msg) {
-		notifier.displayMessage("HBM Warning", msg, MessageType.INFO);
+		
+		if( notifier !=null )
+			notifier.displayMessage("SBM Warning", msg, MessageType.INFO);
+	
 	}
 }

@@ -1,4 +1,4 @@
-package hbm.model;
+package sbm.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

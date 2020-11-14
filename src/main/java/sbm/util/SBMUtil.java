@@ -1,4 +1,4 @@
-package hbm.util;
+package sbm.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Component
-public class HBMMonitorUtil {
+public class SBMUtil {
 	
 	private static Gson gsonConverter;
 	

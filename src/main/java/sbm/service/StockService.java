@@ -1,4 +1,4 @@
-package hbm.service;
+package sbm.service;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -10,17 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import hbm.model.Stock;
-import hbm.model.StockDaily;
-import hbm.model.StockHistoryDTO;
-import hbm.repository.StockDailyRepository;
-import hbm.repository.StockRepository;
 import lombok.extern.log4j.Log4j2;
+import sbm.model.Stock;
+import sbm.model.StockDaily;
+import sbm.model.StockHistoryDTO;
+import sbm.repository.StockDailyRepository;
+import sbm.repository.StockRepository;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
 @Log4j2
-public class HBMService {
+public class StockService {
 
 	@Autowired
 	private StockRepository stockRepository;
@@ -64,5 +64,4 @@ public class HBMService {
 			stockDailyHistoryRepository.save(stockDaily);
 		});
 	}
-
 }

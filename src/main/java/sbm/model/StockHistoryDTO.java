@@ -1,4 +1,4 @@
-package hbm.model;
+package sbm.model;
 
 import java.math.BigDecimal;
 import java.text.ParseException;

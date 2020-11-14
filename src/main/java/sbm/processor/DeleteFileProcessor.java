@@ -1,4 +1,4 @@
-package hbm.processor;
+package sbm.processor;
 
 import java.nio.file.Paths;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-@Component
+@Component(DeleteFileProcessor.NAME)
 public class DeleteFileProcessor implements Processor {
 
 	public static final String NAME = "DeleteFileProcessor";

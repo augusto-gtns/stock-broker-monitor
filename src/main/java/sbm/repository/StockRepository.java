@@ -1,9 +1,9 @@
-package hbm.repository;
+package sbm.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import hbm.model.Stock;
+import sbm.model.Stock;
 
 @Repository
 public interface StockRepository extends CrudRepository<Stock, Long> {

@@ -1,4 +1,4 @@
-package hbm.router;
+package sbm.router;
 
 import java.util.regex.Pattern;
 
@@ -10,24 +10,24 @@ import org.apache.camel.model.RouteDefinition;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import hbm.processor.DeleteFileProcessor;
-import hbm.processor.FilePersistenceProcessor;
-import hbm.processor.NotifierProcessor;
-import hbm.processor.ThrowableProcessor;
-import hbm.util.HBMMonitorUtil;
+import sbm.processor.DeleteFileProcessor;
+import sbm.processor.FilePersistenceProcessor;
+import sbm.processor.NotifierProcessor;
+import sbm.processor.ThrowableProcessor;
+import sbm.util.SBMUtil;
 
 @Component
-public class HomeBrokerRouter extends RouteBuilder {
+public class MainRouter extends RouteBuilder {
 
-	public static final String NAME = "HomeBrokerRouter";
-	public static final String STOCK_LIST_HEADER = "HomeBrokerRouter";
+	public static final String NAME = "MainRouter";
+	public static final String STOCK_LIST_HEADER = "STOCK_LIST_HEADER";
 
-	@Value("${hbm.folder:0}")
+	@Value("${sbm.folder}")
 	private String folder;
 
 	@Override
 	public void configure() throws Exception {
-		RouteDefinition route = from("file://" + HBMMonitorUtil.toRoutePath(folder) + "?noop=true").routeId(HomeBrokerRouter.NAME)
+		RouteDefinition route = from("file://" + SBMUtil.toRoutePath(folder) + "?noop=true").routeId(MainRouter.NAME)
 				.log(LoggingLevel.INFO, log, "Started");
 
 		route.onException(Throwable.class).process(ThrowableProcessor.NAME).handled(true);
@@ -49,7 +49,7 @@ public class HomeBrokerRouter extends RouteBuilder {
 				String fileName = (String) exchange.getIn().getHeader(Exchange.FILE_NAME_ONLY);
 				log.info("File '" + fileName + "' was founded by route");
 
-				String regex = "hbm-\\d+\\.json";
+				String regex = "sbm-\\d+\\.json";
 				return Pattern.compile(regex).matcher(fileName).matches();
 			}
 		};
